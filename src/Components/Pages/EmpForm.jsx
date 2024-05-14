@@ -2,66 +2,76 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createUser } from "../Action/Action";
 import { useNavigate } from "react-router-dom";
-// import "./EmpForm.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EmpForm = () => {
-  const [name, setName] = useState("");
+  const [firstname, setFirstname] = useState("");
   const [lastname, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [jobrole, setJobRol] = useState("");
+  const [jobrole, setJobrole] = useState("");
   const [department, setDepartment] = useState("");
-  const [doj, setDoj] = useState("");
-  const [empid, setEmpId] = useState("");
+  const [dob, setDob] = useState("");
+  const [code, setCode] = useState("");
   const [gender, setGender] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const nav = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading spinner
     try {
-      dispatch(
+      await dispatch(
         createUser({
-          name,
+          firstname,
           lastname,
           email,
           phoneNumber,
           address,
           jobrole,
           department,
-          doj,
-          empid,
+          dob,
+          code,
           gender,
         })
       );
       toast.success("User created successfully");
-      setName("");
+      setFirstname("");
       setEmail("");
       setLastName("");
       setPhoneNumber("");
       setAddress("");
-      setJobRol("");
+      setJobrole("");
       setDepartment("");
-      setDoj("");
-      setEmpId("");
+      setDob("");
+      setCode("");
       setGender("");
       nav("/emptable");
     } catch (error) {
       toast.error("Error occurred while creating user");
     } finally {
+      setLoading(false); // Stop loading spinner regardless of success or failure
     }
   };
 
   return (
     <div className="container my-4">
-      <h2 className="text-center mb-3 fw-bold" style={{ color: "blue" }}>
-        EMPLOYEE FORM
-      </h2>
-      <form onSubmit={handleSubmit} className="Form-card-css ">
+      {loading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          <h2 className="text-center mb-3 fw-bold" style={{ color: "blue" }}>
+            EMPLOYEE FORM
+          </h2>
+          <form onSubmit={handleSubmit} className="Form-card-css ">
         <div className="form-table">
           <div className="form-row">
             <div className="form-cell">
@@ -71,9 +81,9 @@ const EmpForm = () => {
               <input
                 type="text"
                 id="empid"
-                value={empid}
+                value={code}
                 placeholder="eg: ABC123"
-                onChange={(e) => setEmpId(e.target.value)}
+                onChange={(e) => setCode(e.target.value)}
                 required
               />
             </div>
@@ -84,9 +94,9 @@ const EmpForm = () => {
               <input
                 type="text"
                 id="name"
-                value={name}
+                value={firstname}
                 placeholder="Enter your First Name"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setFirstname(e.target.value)}
                 pattern="[A-Za-z]+"
                 required
               />
@@ -127,9 +137,9 @@ const EmpForm = () => {
               <input
                 type="date"
                 id="doj"
-                value={doj}
+                value={dob}
                 placeholder="00/00/0000"
-                onChange={(e) => setDoj(e.target.value)}
+                onChange={(e) => setDob(e.target.value)}
                 required
               />
             </div>
@@ -174,7 +184,7 @@ const EmpForm = () => {
                 id="jobrole"
                 value={jobrole}
                 placeholder="Select a Role"
-                onChange={(e) => setJobRol(e.target.value)}
+                onChange={(e) => setJobrole(e.target.value)}
                 required
               >
                 <option value="">Select Role</option>
@@ -217,10 +227,11 @@ const EmpForm = () => {
           </div>
         </div>
         <button type="submit" className="submit-btn ">
-          Add User
-        </button>
-      </form>
-      <ToastContainer />
+              Add User
+            </button>
+          </form>
+        </>
+      )}
     </div>
   );
 };

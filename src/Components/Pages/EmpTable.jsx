@@ -71,7 +71,7 @@ const ReduxTable = () => {
     ? users.filter((row) => {
         const searchText = globalSearchText.toLowerCase();
         return (
-          (row.name && row.name.toLowerCase().includes(searchText)) ||
+          (row.firstname && row.firstname.toLowerCase().includes(searchText)) ||
           (row.email && row.email.toLowerCase().includes(searchText)) ||
           (row.phoneNumber &&
             row.phoneNumber.toLowerCase().includes(searchText)) ||
@@ -79,9 +79,9 @@ const ReduxTable = () => {
           (row.jobrole && row.jobrole.toLowerCase().includes(searchText)) ||
           (row.department &&
             row.department.toLowerCase().includes(searchText)) ||
-          (row.doj && row.doj.toLowerCase().includes(searchText)) ||
+          (row.dob && row.dob.toLowerCase().includes(searchText)) ||
           (row.gender && row.gender.toLowerCase().includes(searchText)) ||
-          (row.empid && row.empid.toLowerCase().includes(searchText)) ||
+          (row.code && row.code.toLowerCase().includes(searchText)) ||
           (row.address && row.address.toLowerCase().includes(searchText))
         );
       })
@@ -166,6 +166,7 @@ const ReduxTable = () => {
 
   return (
     <div className="text-center col-10 mx-auto  mt-2">
+      
       <div className="d-md-flex border shadow justify-content-between p-3 my-3">
         <div className="d-flex justify-content-center">
           <div>
@@ -238,7 +239,7 @@ const ReduxTable = () => {
             headerStyle={{ width: "3rem" }}
           ></Column>
           <Column
-            field="empid"
+            field="code"
             header="Emp Code"
             sortable
             filter
@@ -246,7 +247,7 @@ const ReduxTable = () => {
             style={{ width: "25%" }}
           />
           <Column
-            field="name"
+            field="firstname"
             header="First Name"
             sortable
             filter
@@ -287,7 +288,7 @@ const ReduxTable = () => {
           />
 
           <Column
-            field="doj"
+            field="dob"
             header="Date Of Birth"
             sortable
             filter
