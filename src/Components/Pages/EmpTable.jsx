@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsers,
   deleteUser,
-} from "../../Component/EmpRegistration/Action/Action";
+} from "../Action/Action";
 import { FaTrashAlt, FaPencilAlt, FaPlus } from "react-icons/fa";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/saga-blue/theme.css";

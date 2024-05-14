@@ -6,7 +6,7 @@ import {
   FETCH_USERS,
   FETCH_USER,
 } from "../Type/Type";
-import { BASE_URL } from "../../Services/Api";
+import { BASE_URL } from "../Services/Api";
 
 export const createUser = (user) => {
   return async (dispatch) => {

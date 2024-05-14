@@ -2,12 +2,13 @@ import React from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import EmpForm from "./Pages/EmpRegistForm/EmpForm";
-import Layout from "./Component/Layout/Layout";
-import EmpTable from "./Pages/EmpRegistTable/EmpTable";
-import EmpUpdate from "./Pages/EmpRegistUpdate/EmpUpdate";
+import EmpForm from "./Components/Pages/EmpForm";
+import Layout from "./Components/Layout/Layout";
+import EmpTable from "./Components/Pages/EmpTable";
+import EmpUpdate from "./Components/Pages/EmpUpdate";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css"
 
 function App() {
   return (

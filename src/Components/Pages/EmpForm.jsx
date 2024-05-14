@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../Component/EmpRegistration/Action/Action";
+import { createUser } from "../Action/Action";
 import { useNavigate } from "react-router-dom";
-import "./EmpForm.css";
+// import "./EmpForm.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
