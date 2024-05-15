@@ -17,10 +17,18 @@ const EmpForm = () => {
   const [dob, setDob] = useState("");
   const [code, setCode] = useState("");
   const [gender, setGender] = useState("");
+  const [branch, setBranch] = useState("");
+  // const [attachments, setAttachments] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const nav = useNavigate();
+
+  // const handleAttachmentChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setAttachments([...attachments, file]);
+  // };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +46,7 @@ const EmpForm = () => {
           dob,
           code,
           gender,
+          branch,
         })
       );
       toast.success("User created successfully");
@@ -51,6 +60,7 @@ const EmpForm = () => {
       setDob("");
       setCode("");
       setGender("");
+      setBranch("");
       nav("/emptable");
     } catch (error) {
       toast.error("Error occurred while creating user");
@@ -66,7 +76,10 @@ const EmpForm = () => {
       ) : (
         <>
           <div className="container mt-3">
-            <h2 className="text-center mb-3 fw-bold" style={{ color: "#007bff" }}>
+            <h2
+              className="text-center mb-4 fw-bold"
+              style={{ color: "#007bff" }}
+            >
               EMPLOYEE FORM
             </h2>
             <form onSubmit={handleSubmit} className="Form-card-css ">
@@ -80,7 +93,7 @@ const EmpForm = () => {
                       type="text"
                       id="empid"
                       value={code}
-                      placeholder="eg: ABC123"
+                      placeholder="ABC123"
                       onChange={(e) => setCode(e.target.value)}
                       required
                     />
@@ -213,11 +226,37 @@ const EmpForm = () => {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-cell">
+                  <div className="form-cell ">
+                    <label htmlFor="branch">
+                      Branch<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <select
+                      id="branch"
+                      value={branch}
+                      onChange={(e) => setBranch(e.target.value)}
+                      required
+                    >
+                      <option value="">Select Branch</option>
+                      <option value="branch1">Branch 1</option>
+                      <option value="branch2">Branch 2</option>
+                      <option value="branch3">Branch 3</option>
+                    </select>
+                    <div className="form-cell mt-4 ">
+                      <label htmlFor="attachment">Attachment</label>
+                      <input
+                        type="file"
+                        id="attachment"
+                        // onChange={(e) => handleAttachmentChange(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-cell ">
                     <label htmlFor="address">
                       Address<span style={{ color: "red" }}>*</span>
                     </label>
                     <textarea
+                      className="w-100 "
+                      style={{ height: "100" }}
                       id="address"
                       value={address}
                       placeholder="Enter Your Address"
@@ -227,6 +266,7 @@ const EmpForm = () => {
                   </div>
                 </div>
               </div>
+
               <button type="submit" className="submit-btn ">
                 Add User
               </button>

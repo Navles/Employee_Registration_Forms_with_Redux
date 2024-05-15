@@ -8,10 +8,7 @@ import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchUsers,
-  deleteUser,
-} from "../Action/Action";
+import { fetchUsers, deleteUser } from "../Action/Action";
 import { FaTrashAlt, FaPencilAlt, FaPlus } from "react-icons/fa";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -19,10 +16,10 @@ import "primereact/resources/primereact.min.css";
 import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// import { uploadFileToApi } from './api';
+// import { generateUniqueId } from './utils';
 
-
-
-const ReduxTable = () => {
+const EmpTable = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
   const navigate = useNavigate();
@@ -34,10 +31,11 @@ const ReduxTable = () => {
     deleteTarget: null,
   });
   const [globalSearchText, setGlobalSearchText] = useState("");
+  // const [usersWithAttachments, setUsersWithAttachments] = useState([]);
 
   useEffect(() => {
     dispatch(fetchUsers());
-  });
+  }, [dispatch]);
 
   const handleEditClick = (id) => {
     navigate(`/form/${id}/edit`);
@@ -54,7 +52,9 @@ const ReduxTable = () => {
 
   const handleDeleteSelected = async () => {
     try {
-      await Promise.all(selectedProducts.map((user) => dispatch(deleteUser(user.id))));
+      await Promise.all(
+        selectedProducts.map((user) => dispatch(deleteUser(user.id)))
+      );
       setSelectedProducts([]);
       toast.success("Selected users deleted successfully");
     } catch (error) {
@@ -82,7 +82,9 @@ const ReduxTable = () => {
           (row.dob && row.dob.toLowerCase().includes(searchText)) ||
           (row.gender && row.gender.toLowerCase().includes(searchText)) ||
           (row.code && row.code.toLowerCase().includes(searchText)) ||
-          (row.address && row.address.toLowerCase().includes(searchText))
+          (row.address && row.address.toLowerCase().includes(searchText)) ||
+          (row.attachments &&
+            row.attachments.toLowerCase().includes(searchText))
         );
       })
     : [];
@@ -164,14 +166,28 @@ const ReduxTable = () => {
     </div>
   );
 
+  // const handleFileUpload = async (file) => {
+  //   try {
+  //     const response = await uploadFileToApi(file);
+  //     setUsersWithAttachments((prevUsers) => [
+  //       ...prevUsers,
+  //       { id: generateUniqueId(), attachments: [response.data] },
+  //     ]);
+  //   } catch (error) {
+  //     console.error("Error uploading file:", error);
+  //   }
+  // };
+
   return (
-    <div className="text-center col-10 mx-auto  mt-2">
-      
-      <div className="d-md-flex border shadow justify-content-between p-3 my-3"style={{backgroundColor:"#F8F9FA"}}>
+    <div className="text-center col-10 mx-auto mt-2">
+      <div
+        className="d-md-flex border shadow justify-content-between p-3 my-3"
+        style={{ backgroundColor: "#F8F9FA" }}
+      >
         <div className="d-flex justify-content-center">
           <div>
             <Link to="/">
-              <Button className="p-button p-button-success  me-2 rounded">
+              <Button className="p-button p-button-success me-2 rounded">
                 <FaPlus className="me-2" />
                 <span>Add New</span>
               </Button>
@@ -234,10 +250,7 @@ const ReduxTable = () => {
           dataKey="id"
           tableStyle={{ minWidth: "50rem" }}
         >
-          <Column
-            selectionMode="multiple"
-            headerStyle={{ width: "3rem" }}
-          ></Column>
+          <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
           <Column
             field="code"
             header="Emp Code"
@@ -286,7 +299,6 @@ const ReduxTable = () => {
             filterPlaceholder="Search by name"
             style={{ width: "25%" }}
           />
-
           <Column
             field="dob"
             header="Date Of Birth"
@@ -303,10 +315,17 @@ const ReduxTable = () => {
             filterPlaceholder="Search by name"
             style={{ width: "25%" }}
           />
-
           <Column
             field="gender"
             header="Gender"
+            sortable
+            filter
+            filterPlaceholder="Search by name"
+            style={{ width: "25%" }}
+          />
+          <Column
+            field="branch"
+            header="Branch"
             sortable
             filter
             filterPlaceholder="Search by name"
@@ -320,7 +339,23 @@ const ReduxTable = () => {
             filterPlaceholder="Search by name"
             style={{ width: "25%" }}
           />
-
+          {/* <Column
+            field="attachments"
+            header="Attachments"
+            sortable
+            filter
+            body={(rowData) =>
+              rowData.attachments ? (
+                <ul>
+                  {rowData.attachments.map((attachment, index) => (
+                    <li key={index}>{attachment.name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <span>No attachments</span>
+              )
+            }
+          /> */}
           <Column
             body={(rowData) => (
               <>
@@ -426,4 +461,4 @@ const ReduxTable = () => {
   );
 };
 
-export default ReduxTable;
+export default EmpTable;

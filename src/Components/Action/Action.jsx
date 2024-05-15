@@ -3,8 +3,8 @@ import {
   CREATE_USER,
   UPDATE_USER,
   DELETE_USER,
-  FETCH_USERS,
-  FETCH_USER,
+  GET_USERS,
+  GET_USER,
 } from "../Type/Type";
 import { BASE_URL } from "../Services/Api";
 
@@ -45,7 +45,7 @@ export const fetchUsers = () => {
   return async (dispatch) => {
     try {
       const response = await axios.get(BASE_URL);
-      dispatch({ type: FETCH_USERS, payload: response.data });
+      dispatch({ type: GET_USERS, payload: response.data });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -56,7 +56,7 @@ export const fetchUser = (id) => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`${BASE_URL}/${id}`);
-      dispatch({ type: FETCH_USER, payload: response.data });
+      dispatch({ type: GET_USER, payload: response.data });
     } catch (error) {
       console.error("Error fetching user:", error);
     }

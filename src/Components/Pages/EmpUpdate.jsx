@@ -18,9 +18,17 @@ const EmpUpdate = () => {
   const [dob, setDob] = useState("");
   const [code, setCode] = useState("");
   const [gender, setGender] = useState("");
+  const [branch, setBranch] = useState("");
+  // const [attachments, setAttachments] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const [loading, setLoading] = useState(false);
+  // const handleAttachmentChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setAttachments([...attachments, file]);
+  // };
 
   useEffect(() => {
     dispatch(fetchUser(id));
@@ -40,6 +48,7 @@ const EmpUpdate = () => {
       setDob(userToUpdate.dob);
       setCode(userToUpdate.code);
       setGender(userToUpdate.gender);
+      setBranch(userToUpdate.branch);
     }
   }, [userToUpdate]);
 
@@ -60,6 +69,7 @@ const EmpUpdate = () => {
             dob,
             code,
             gender,
+            branch,
           })
         );
         setFirstname("");
@@ -72,6 +82,7 @@ const EmpUpdate = () => {
         setDob("");
         setCode("");
         setGender("");
+        setBranch("");
         nav("/emptable");
         toast.success("User updated successfully!", {});
       } catch (error) {
@@ -89,7 +100,10 @@ const EmpUpdate = () => {
       ) : (
         <>
           <div className="container mt-3">
-            <h2 className="text-center mb-3 fw-bold" style={{ color: "#007bff" }}>
+            <h2
+              className="text-center mb-4 fw-bold"
+              style={{ color: "#007bff" }}
+            >
               UPDATING FORM
             </h2>
             <form onSubmit={handleSubmit} className="Form-card-css ">
@@ -103,7 +117,7 @@ const EmpUpdate = () => {
                       type="text"
                       id="empid"
                       value={code}
-                      placeholder="eg: ABC123"
+                      placeholder="ABC123"
                       onChange={(e) => setCode(e.target.value)}
                       required
                     />
@@ -233,11 +247,37 @@ const EmpUpdate = () => {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-cell">
+                  <div className="form-cell ">
+                    <label htmlFor="branch">
+                      Branch<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <select
+                      id="branch"
+                      value={branch}
+                      onChange={(e) => setBranch(e.target.value)}
+                      required
+                    >
+                      <option value="">Select Branch</option>
+                      <option value="branch1">Branch 1</option>
+                      <option value="branch2">Branch 2</option>
+                      <option value="branch3">Branch 3</option>
+                    </select>
+                    <div className="form-cell mt-4 ">
+                      <label htmlFor="attachment">Attachment</label>
+                      <input
+                        type="file"
+                        id="attachment"
+                        // onChange={(e) => handleAttachmentChange(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-cell ">
                     <label htmlFor="address">
                       Address<span style={{ color: "red" }}>*</span>
                     </label>
                     <textarea
+                      className="w-100 "
+                      style={{ height: "100" }}
                       id="address"
                       value={address}
                       placeholder="Enter Your Address"

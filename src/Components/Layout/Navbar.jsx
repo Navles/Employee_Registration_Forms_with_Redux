@@ -15,15 +15,15 @@ function Layout() {
         EMPLOYEE REGISTRATION
       </h3>
 
-      <ul className={isOpen ? "navbar-navs active" : "navbar-navs me-3"}>
-        <li className="nav-items">
+      <ul className={isOpen ? "navbar-navs active" : "navbar-navs me-4"}>
+        <li className="nav-items me-4">
           <a href="/" className="nav-links fw-bold">
-            FORM
+            ADD EMPLOYEE
           </a>
         </li>
         <li className="nav-items">
           <a href="/emptable" className="nav-links fw-bold">
-            LIST DETAILS
+            EMPLOYEE DETAILS
           </a>
         </li>
         

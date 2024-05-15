@@ -2,8 +2,8 @@ import {
   CREATE_USER,
   UPDATE_USER,
   DELETE_USER,
-  FETCH_USERS,
-  FETCH_USER,
+  GET_USERS,
+  GET_USER,
 } from "./Components/Type/Type";
 
 const initialState = {
@@ -28,12 +28,12 @@ const userReducer = (state = initialState, action) => {
         ...state,
         users: state.users.filter((user) => user.id !== action.payload),
       };
-    case FETCH_USERS:
+    case GET_USERS:
       return {
         ...state,
         users: action.payload,
       };
-    case FETCH_USER:
+    case GET_USER:
       return {
         ...state,
         user: action.payload,
