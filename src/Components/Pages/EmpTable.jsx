@@ -167,7 +167,7 @@ const ReduxTable = () => {
   return (
     <div className="text-center col-10 mx-auto  mt-2">
       
-      <div className="d-md-flex border shadow justify-content-between p-3 my-3">
+      <div className="d-md-flex border shadow justify-content-between p-3 my-3"style={{backgroundColor:"#F8F9FA"}}>
         <div className="d-flex justify-content-center">
           <div>
             <Link to="/">

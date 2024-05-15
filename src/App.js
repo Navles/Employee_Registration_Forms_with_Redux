@@ -3,7 +3,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import EmpForm from "./Components/Pages/EmpForm";
-import Layout from "./Components/Layout/Layout";
+import Layout from "./Components/Layout/Navbar";
 import EmpTable from "./Components/Pages/EmpTable";
 import EmpUpdate from "./Components/Pages/EmpUpdate";
 import { ToastContainer } from "react-toastify";

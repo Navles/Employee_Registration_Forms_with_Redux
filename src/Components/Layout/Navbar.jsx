@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Layout.css";
+import "./Navbar.css";
 import { FaBars } from "react-icons/fa";
 
 function Layout() {
@@ -11,26 +11,22 @@ function Layout() {
 
   return (
     <nav className="navbars">
-      <h2 className="" style={{ color: "white" }}>
+      <h3 className="ms-3 fw-bold " >
         EMPLOYEE REGISTRATION
-      </h2>
+      </h3>
 
-      <ul className={isOpen ? "navbar-navs active" : "navbar-navs"}>
+      <ul className={isOpen ? "navbar-navs active" : "navbar-navs me-3"}>
         <li className="nav-items">
-          <a href="/" className="nav-links">
-            Employee Form
+          <a href="/" className="nav-links fw-bold">
+            FORM
           </a>
         </li>
         <li className="nav-items">
-          <a href="/emptable" className="nav-links">
-            Employee Details
+          <a href="/emptable" className="nav-links fw-bold">
+            LIST DETAILS
           </a>
         </li>
-        <li className="nav-items">
-          <a href="/edit" className="nav-links">
-            Employee Updates
-          </a>
-        </li>
+        
       </ul>
       <button className="toggle-button" onClick={toggleNavbar}>
         <FaBars />

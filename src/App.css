@@ -1,10 +1,12 @@
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  background-color: #bdbbbb;
+  padding: 10px 20px 10px 20px;
+  background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3),
+    /* Bottom shadow */ -5px 0 5px rgba(0, 0, 0, 0.3),
+    /* Left shadow */ 5px 0 5px rgba(0, 0, 0, 0.3); /* Right shadow */
 }
 
 .form-table {
@@ -38,6 +40,7 @@
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 16px;
+  color: #6C757D;
 }
 
 .form-cell textarea {
@@ -54,6 +57,7 @@
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
 .submit-btn:hover {
