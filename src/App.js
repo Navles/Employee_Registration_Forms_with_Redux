@@ -15,10 +15,10 @@ function App() {
     <BrowserRouter>
       <Layout />
       <Routes>
-        <Route path="/" element={<EmpForm />} />
-        <Route path="/emptable" element={<EmpTable />} />
+        <Route path="/employee/create" element={<EmpForm />} />
+        <Route path="/employee/view" element={<EmpTable />} />
         <Route path="/edit" element={<EmpUpdate />}></Route>
-        <Route path="/form/:id/edit" element={<EmpUpdate />} />
+        <Route path="/employee/:id/edit" element={<EmpUpdate />} />
       </Routes>
       <ToastContainer />
     </BrowserRouter>

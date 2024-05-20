@@ -16,6 +16,7 @@ import "primereact/resources/primereact.min.css";
 import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoaderSpinner from "../Layout/Loader";
 // import { uploadFileToApi } from './api';
 // import { generateUniqueId } from './utils';
 
@@ -31,6 +32,8 @@ const EmpTable = () => {
     deleteTarget: null,
   });
   const [globalSearchText, setGlobalSearchText] = useState("");
+  const [loading, setLoading] = useState(false);
+
   // const [usersWithAttachments, setUsersWithAttachments] = useState([]);
 
   useEffect(() => {
@@ -38,19 +41,23 @@ const EmpTable = () => {
   }, [dispatch]);
 
   const handleEditClick = (id) => {
-    navigate(`/form/${id}/edit`);
+    navigate(`/employee/${id}/edit`);
   };
 
   const handleDelete = async (id) => {
+    setLoading(true);
     try {
       await dispatch(deleteUser(id));
       toast.success("User deleted successfully");
     } catch (error) {
       toast.error("Error deleting user");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteSelected = async () => {
+    setLoading(true);
     try {
       await Promise.all(
         selectedProducts.map((user) => dispatch(deleteUser(user.id)))
@@ -59,6 +66,8 @@ const EmpTable = () => {
       toast.success("Selected users deleted successfully");
     } catch (error) {
       toast.error("Error deleting selected users");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,167 +188,174 @@ const EmpTable = () => {
   // };
 
   return (
-    <div className="text-center col-10 mx-auto mt-2">
-      <div
-        className="d-md-flex border shadow justify-content-between p-3 my-3"
-        style={{ backgroundColor: "#F8F9FA" }}
-      >
-        <div className="d-flex justify-content-center">
-          <div>
-            <Link to="/">
-              <Button className="p-button p-button-success me-2 rounded">
-                <FaPlus className="me-2" />
-                <span>Add New</span>
-              </Button>
-            </Link>
+    <>
+      {loading ? (
+        <LoaderSpinner />
+      ) : (
+        <div className="text-center col-10 mx-auto mt-2">
+          <div
+            className="d-md-flex border shadow justify-content-between p-3 my-3"
+            style={{ backgroundColor: "#F8F9FA" }}
+          >
+            <div className="d-flex justify-content-center">
+              <div>
+                <Link to="/employee/create">
+                  <Button className="p-button p-button-success me-2 rounded">
+                    <FaPlus className="me-2" />
+                    <span>Add New</span>
+                  </Button>
+                </Link>
+              </div>
+              <div>
+                <Button
+                  onClick={() =>
+                    setState({ ...state, deleteSelectedDialogVisible: true })
+                  }
+                  className="p-button p-button-danger rounded"
+                  disabled={!selectedProducts || selectedProducts.length === 0}
+                >
+                  <FaTrashAlt className="me-2" />
+                  <span>Delete</span>
+                </Button>
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-center mt-2 mt-md-0">
+              <Button
+                label=""
+                type="button"
+                className="mx-1 export-buttons rounded"
+                icon="pi pi-file-pdf "
+                rounded
+                severity="warning"
+                onClick={() => exportPdf(false)}
+                data-pr-tooltip="Export to PDF"
+              />
+              <Button
+                label=""
+                type="button"
+                className="mx-1 export-buttons rounded"
+                icon="pi pi-file-excel"
+                rounded
+                onClick={exportExcel}
+                data-pr-tooltip="Export to Excel"
+              />
+            </div>
           </div>
-          <div>
-            <Button
-              onClick={() =>
-                setState({ ...state, deleteSelectedDialogVisible: true })
-              }
-              className="p-button p-button-danger rounded"
-              disabled={!selectedProducts || selectedProducts.length === 0}
+          <Tooltip target=".export-buttons>button" position="bottom" />
+
+          <div className="datatable">
+            <DataTable
+              ref={dt}
+              value={filteredData}
+              paginator
+              header={header}
+              rows={5}
+              className="card shadow mb-5"
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+              columnResizeMode="expand"
+              resizableColumns
+              showGridlines
+              selection={selectedProducts}
+              onSelectionChange={(e) => setSelectedProducts(e.value)}
+              dataKey="id"
+              tableStyle={{ minWidth: "50rem" }}
             >
-              <FaTrashAlt className="me-2" />
-              <span>Delete</span>
-            </Button>
-          </div>
-        </div>
-
-        <div className="d-flex justify-content-center mt-2 mt-md-0">
-          <Button
-            label=""
-            type="button"
-            className="mx-1 export-buttons rounded"
-            icon="pi pi-file-pdf "
-            rounded
-            severity="warning"
-            onClick={() => exportPdf(false)}
-            data-pr-tooltip="Export to PDF"
-          />
-          <Button
-            label=""
-            type="button"
-            className="mx-1 export-buttons rounded"
-            icon="pi pi-file-excel"
-            rounded
-            onClick={exportExcel}
-            data-pr-tooltip="Export to Excel"
-          />
-        </div>
-      </div>
-      <Tooltip target=".export-buttons>button" position="bottom" />
-
-      <div className="datatable">
-        <DataTable
-          ref={dt}
-          value={filteredData}
-          paginator
-          header={header}
-          rows={5}
-          className="card shadow mb-5"
-          rowsPerPageOptions={[5, 10, 25, 50]}
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-          columnResizeMode="expand"
-          resizableColumns
-          showGridlines
-          selection={selectedProducts}
-          onSelectionChange={(e) => setSelectedProducts(e.value)}
-          dataKey="id"
-          tableStyle={{ minWidth: "50rem" }}
-        >
-          <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
-          <Column
-            field="code"
-            header="Emp Code"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="firstname"
-            header="First Name"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="lastname"
-            header="Last Name"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="email"
-            header="Email"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="department"
-            header="Department"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="jobrole"
-            header="Role"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="dob"
-            header="Date Of Birth"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="phoneNumber"
-            header="Phone Number"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="gender"
-            header="Gender"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="branch"
-            header="Branch"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          <Column
-            field="address"
-            header="Address"
-            sortable
-            filter
-            filterPlaceholder="Search by name"
-            style={{ width: "25%" }}
-          />
-          {/* <Column
+              <Column
+                selectionMode="multiple"
+                headerStyle={{ width: "3rem" }}
+              />
+              <Column
+                field="code"
+                header="Emp Code"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="firstname"
+                header="First Name"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="lastname"
+                header="Last Name"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="email"
+                header="Email"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="department"
+                header="Department"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="jobrole"
+                header="Role"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="dob"
+                header="Date Of Birth"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="phoneNumber"
+                header="Phone Number"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="gender"
+                header="Gender"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="branch"
+                header="Branch"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              <Column
+                field="address"
+                header="Address"
+                sortable
+                filter
+                filterPlaceholder="Search by name"
+                style={{ width: "25%" }}
+              />
+              {/* <Column
             field="attachments"
             header="Attachments"
             sortable
@@ -356,108 +372,114 @@ const EmpTable = () => {
               )
             }
           /> */}
-          <Column
-            body={(rowData) => (
-              <>
-                <div key={rowData.id}></div>
-                <Link to={`/form/${rowData.id}/edit`}>
-                  <Button
-                    onClick={() => handleEditClick(rowData.id)}
-                    icon={<FaPencilAlt />}
-                    className="p-button p-button-primary mx-2 rounded"
-                    rounded
-                  />
-                </Link>
+              <Column
+                body={(rowData) => (
+                  <>
+                    <div key={rowData.id}></div>
+                    <Link to={`/employee/${rowData.id}/edit`}>
+                      <Button
+                        onClick={() => handleEditClick(rowData.id)}
+                        icon={<FaPencilAlt />}
+                        className="p-button p-button-primary mx-2 rounded"
+                        rounded
+                      />
+                    </Link>
+                    <Button
+                      onClick={() =>
+                        setState({
+                          ...state,
+                          deleteDialogVisible: true,
+                          deleteTarget: rowData,
+                        })
+                      }
+                      icon={<FaTrashAlt />}
+                      className="p-button p-button-danger rounded"
+                      rounded
+                    />
+                  </>
+                )}
+                header="Actions"
+              />
+            </DataTable>
+          </div>
+
+          <Dialog
+            visible={state.deleteDialogVisible}
+            onHide={() =>
+              setState({
+                ...state,
+                deleteDialogVisible: false,
+                deleteTarget: null,
+              })
+            }
+            header="Confirm Deletion"
+            footer={
+              <div>
                 <Button
+                  label="No"
+                  icon="pi pi-times"
+                  className="p-button-text"
                   onClick={() =>
                     setState({
                       ...state,
-                      deleteDialogVisible: true,
-                      deleteTarget: rowData,
+                      deleteDialogVisible: false,
+                      deleteTarget: null,
                     })
                   }
-                  icon={<FaTrashAlt />}
-                  className="p-button p-button-danger rounded"
-                  rounded
                 />
-              </>
+                <Button
+                  label="Yes"
+                  icon="pi pi-check"
+                  className="p-button-danger"
+                  onClick={() => {
+                    handleDelete(state.deleteTarget.id);
+                    setState({ ...state, deleteDialogVisible: false });
+                  }}
+                />
+              </div>
+            }
+          >
+            {state.deleteTarget && (
+              <p>
+                Are you sure you want to delete the user{" "}
+                <strong>{state.deleteTarget.name}</strong>?
+              </p>
             )}
-            header="Actions"
-          />
-        </DataTable>
-      </div>
+          </Dialog>
 
-      <Dialog
-        visible={state.deleteDialogVisible}
-        onHide={() =>
-          setState({ ...state, deleteDialogVisible: false, deleteTarget: null })
-        }
-        header="Confirm Deletion"
-        footer={
-          <div>
-            <Button
-              label="No"
-              icon="pi pi-times"
-              className="p-button-text"
-              onClick={() =>
-                setState({
-                  ...state,
-                  deleteDialogVisible: false,
-                  deleteTarget: null,
-                })
-              }
-            />
-            <Button
-              label="Yes"
-              icon="pi pi-check"
-              className="p-button-danger"
-              onClick={() => {
-                handleDelete(state.deleteTarget.id);
-                setState({ ...state, deleteDialogVisible: false });
-              }}
-            />
-          </div>
-        }
-      >
-        {state.deleteTarget && (
-          <p>
-            Are you sure you want to delete the user{" "}
-            <strong>{state.deleteTarget.name}</strong>?
-          </p>
-        )}
-      </Dialog>
-
-      <Dialog
-        visible={state.deleteSelectedDialogVisible}
-        onHide={() =>
-          setState({ ...state, deleteSelectedDialogVisible: false })
-        }
-        header="Confirm Deletion"
-        footer={
-          <div>
-            <Button
-              label="No"
-              icon="pi pi-times"
-              className="p-button-text"
-              onClick={() =>
-                setState({ ...state, deleteSelectedDialogVisible: false })
-              }
-            />
-            <Button
-              label="Yes"
-              icon="pi pi-check"
-              className="p-button-danger"
-              onClick={() => {
-                handleDeleteSelected();
-                setState({ ...state, deleteSelectedDialogVisible: false });
-              }}
-            />
-          </div>
-        }
-      >
-        <p>Are you sure you want to delete the selected users?</p>
-      </Dialog>
-    </div>
+          <Dialog
+            visible={state.deleteSelectedDialogVisible}
+            onHide={() =>
+              setState({ ...state, deleteSelectedDialogVisible: false })
+            }
+            header="Confirm Deletion"
+            footer={
+              <div>
+                <Button
+                  label="No"
+                  icon="pi pi-times"
+                  className="p-button-text"
+                  onClick={() =>
+                    setState({ ...state, deleteSelectedDialogVisible: false })
+                  }
+                />
+                <Button
+                  label="Yes"
+                  icon="pi pi-check"
+                  className="p-button-danger"
+                  onClick={() => {
+                    handleDeleteSelected();
+                    setState({ ...state, deleteSelectedDialogVisible: false });
+                  }}
+                />
+              </div>
+            }
+          >
+            <p>Are you sure you want to delete the selected users?</p>
+          </Dialog>
+        </div>
+      )}
+    </>
   );
 };
 

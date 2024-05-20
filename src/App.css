@@ -48,7 +48,7 @@
   min-height: 150px;
 }
 
-.submit-btn {
+/* .submit-btn{
   padding: 8px 12px;
   background-color: #007bff;
   color: #fff;
@@ -62,12 +62,14 @@
 
 .submit-btn:hover {
   background-color: #0056b3;
-}
+} */
+
+
 
 .Form-card-css {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
 }
 .required:after {
   content: "*";
